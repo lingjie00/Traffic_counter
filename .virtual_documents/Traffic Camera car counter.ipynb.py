@@ -185,7 +185,7 @@ urls = [woodlands, kje, sle, tpe, bke, aye, cte, mce, ecp, pie, stg]
 traffic_cameras = update_camera()
 
 
-fig, [ax1, ax2, ax3, ax4, ax5] = plt.subplots(5, 5, figsize=(20,20), dpi=300, gridspec_kw={'hspace':0})
+fig, [ax1, ax2, ax3, ax4, ax5] = plt.subplots(5, 5, figsize=(20,20), dpi=100, gridspec_kw={'hspace':0})
 for ax, cam, title in zip(ax1, list(traffic_cameras.values())[:5], list(traffic_cameras.keys())[:5]):
     ax.axis('off')
     result = run_detector_car(detector, cam)
@@ -213,7 +213,7 @@ for ax, cam, title in zip(ax5, list(traffic_cameras.values())[20:25], list(traff
     ax.set_title(title, fontdict={'fontsize':8})
 
 
-fig.savefig('output/traffic_cam.jpg', dpi=600, bbox_inches='tight', facecolor='white')
+# fig.savefig('output/traffic_cam.jpg', dpi=600, bbox_inches='tight', facecolor='white')
 
 
 # fig2, [ax1, ax2, ax3, ax4, ax5] = plt.subplots(5, 5, figsize=(20,20), dpi=300, gridspec_kw={'hspace':0})
