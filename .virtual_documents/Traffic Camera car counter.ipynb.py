@@ -287,3 +287,6 @@ for ax, cam, title in zip(ax5, list(traffic_cameras.values())[20:25], list(traff
 #     ax.set_title(title, fontdict={'fontsize':8})
 # ax2[-1].axis('off')
 # fig4.savefig('output/traffic_cam4.jpg', dpi=600, bbox_inches='tight', facecolor='white')
+
+
+
