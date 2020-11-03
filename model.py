@@ -104,6 +104,12 @@ def detect():
 def get_cameras():
     return json.dumps(list(traffic_cameras.keys()))
 
+@app.route('/refresh', methods=['POST'])
+def refresh():
+    global traffic_cameras  # update global variable
+    traffic_cameras = update_camera()
+    return 'list of camera refreshed'
+
 # run a simple test
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5080)
