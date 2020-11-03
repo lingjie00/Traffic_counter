@@ -24,6 +24,7 @@ def display_image(image):
     fig = plt.figure(figsize=(20, 15))  # create a figure
     plt.grid(False)  # switch off the grids
     plt.imshow(image)  # show the image
+    plt.show()
     return fig
 
 
@@ -146,66 +147,4 @@ def get_img(img_url):
     pil_image = Image.open(image_data)
 #     pil_image = ImageOps.fit(pil_image, (512, 512), Image.ANTIALIAS) # resize photo
     return pil_image
-
-
-def run_detector_car(detector, img_link):
-    """
-    detect the number of car in an given image url
-    """
-    img = get_img(img_link)
-    img_np = np.array(img)
-    converted_img = tf.convert_to_tensor(img_np)
-    converted_img = tf.image.convert_image_dtype(converted_img, tf.float32)[tf.newaxis, ...]
-    start_time = time.time()
-    result = detector(converted_img)
-    end_time = time.time()
-
-    result = {key: value.numpy() for key, value in result.items()}
-
-    car_index = (np.isin(np.array(result["detection_class_entities"], dtype='str'),
-                         ['Car', 'Vehicle', 'Land vehicle', 'Motorcycle'])) & (  # identify select types
-                            result["detection_scores"] >= 0.1)  # min score
-
-    # if printing the results on screen
-    # print("Found %d cars." % len(result["detection_scores"][car_index]))
-    # print("Inference time: ", end_time-start_time)
-
-    title = 'Found {} cars.\nInference time: {}'.format(len(result["detection_scores"][car_index]),
-                                                        end_time - start_time)
-
-    image_with_boxes = draw_boxes(
-        np.array(img_np, np.int32), result["detection_boxes"][car_index],
-        result["detection_class_entities"][car_index], result["detection_scores"][car_index],
-        title
-    )
-
-    # if to display the image
-    # display_image(image_with_boxes)
-    return {'num_cars': len(result["detection_scores"][car_index]), 'time_taken': end_time - start_time,
-            'img': image_with_boxes}
-
-
-def update_camera():
-    """
-    get all the latest traffic camera photos
-    """
-
-    # the list of highways in Singapore
-    woodlands = 'https://www.onemotoring.com.sg/content/onemotoring/home/driving/traffic_information/traffic-cameras/woodlands.html#trafficCameras'
-    kje = 'https://www.onemotoring.com.sg/content/onemotoring/home/driving/traffic_information/traffic-cameras/kje.html#trafficCameras'
-    sle = 'https://www.onemotoring.com.sg/content/onemotoring/home/driving/traffic_information/traffic-cameras/sle.html#trafficCameras'
-    tpe = 'https://www.onemotoring.com.sg/content/onemotoring/home/driving/traffic_information/traffic-cameras/tpe.html#trafficCameras'
-    bke = 'https://www.onemotoring.com.sg/content/onemotoring/home/driving/traffic_information/traffic-cameras/bke.html#trafficCameras'
-    aye = 'https://www.onemotoring.com.sg/content/onemotoring/home/driving/traffic_information/traffic-cameras/aye.html#trafficCameras'
-    cte = 'https://www.onemotoring.com.sg/content/onemotoring/home/driving/traffic_information/traffic-cameras/cte.html#trafficCameras'
-    mce = 'https://www.onemotoring.com.sg/content/onemotoring/home/driving/traffic_information/traffic-cameras/mce.html#trafficCameras'
-    ecp = 'https://www.onemotoring.com.sg/content/onemotoring/home/driving/traffic_information/traffic-cameras/ecp.html#trafficCameras'
-    pie = 'https://www.onemotoring.com.sg/content/onemotoring/home/driving/traffic_information/traffic-cameras/pie.html#trafficCameras'
-    stg = 'https://www.onemotoring.com.sg/content/onemotoring/home/driving/traffic_information/traffic-cameras/stg.html#trafficCameras'
-    urls = [woodlands, kje, sle, tpe, bke, aye, cte, mce, ecp, pie, stg]
-
-    traffic_cameras = {}
-    for url in urls:
-        traffic_cameras.update(get_url(url))
-    return traffic_cameras
 
