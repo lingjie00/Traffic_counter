@@ -73,11 +73,15 @@ def run_detector_car(detector, img_link, plot = False):
     else:
         return {'num_cars': len(result["detection_scores"][car_index]), 'time_taken': end_time - start_time}
 
-# download model from tfhub
-# two models: mobilenet which is fast but less accurate,
-# inception resnet which is bigger model but more accurate
-# we import mobilenet here for faster loading time
-module_handle = "https://tfhub.dev/google/openimages_v4/ssd/mobilenet_v2/1"  #@param ["https://tfhub.dev/google/openimages_v4/ssd/mobilenet_v2/1", "https://tfhub.dev/google/faster_rcnn/openimages_v4/inception_resnet_v2/1"]
+# two methods to load module
+# from tensorflow hub
+# module_handle = 'https://tfhub.dev/google/openimages_v4/ssd/mobilenet_v2/1' # mobile net: fast but less accurate
+# module_handle = 'https://tfhub.dev/google/faster_rcnn/openimages_v4/inception_resnet_v2/1' # resnet: slow but accurate
+
+# from local
+module_handle = 'openimages_v4_ssd_mobilenet_v2_1'
+
+# load detector
 detector_model = hub.load(module_handle)
 detector = detector_model.signatures['default']
 
